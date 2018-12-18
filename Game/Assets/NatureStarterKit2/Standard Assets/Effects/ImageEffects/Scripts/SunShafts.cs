@@ -3,145 +3,145 @@ using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
-    [ExecuteInEditMode]
-    [RequireComponent (typeof(Camera))]
-    [AddComponentMenu ("Image Effects/Rendering/Sun Shafts")]
-    public class SunShafts : PostEffectsBase
-    {
-        public enum SunShaftsResolution
-        {
-            Low = 0,
-            Normal = 1,
-            High = 2,
-        }
+    //[ExecuteInEditMode]
+    //[RequireComponent (typeof(Camera))]
+    //[AddComponentMenu ("Image Effects/Rendering/Sun Shafts")]
+    //public class SunShafts : PostEffectsBase
+    //{
+    //    public enum SunShaftsResolution
+    //    {
+    //        Low = 0,
+    //        Normal = 1,
+    //        High = 2,
+    //    }
 
-        public enum ShaftsScreenBlendMode
-        {
-            Screen = 0,
-            Add = 1,
-        }
-
-
-        public SunShaftsResolution resolution = SunShaftsResolution.Normal;
-        public ShaftsScreenBlendMode screenBlendMode = ShaftsScreenBlendMode.Screen;
-
-        public Transform sunTransform;
-        public int radialBlurIterations = 2;
-        public Color sunColor = Color.white;
-        public Color sunThreshold = new Color(0.87f,0.74f,0.65f);
-        public float sunShaftBlurRadius = 2.5f;
-        public float sunShaftIntensity = 1.15f;
-
-        public float maxRadius = 0.75f;
-
-        public bool  useDepthTexture = true;
-
-        public Shader sunShaftsShader;
-        private Material sunShaftsMaterial;
-
-        public Shader simpleClearShader;
-        private Material simpleClearMaterial;
+    //    public enum ShaftsScreenBlendMode
+    //    {
+    //        Screen = 0,
+    //        Add = 1,
+    //    }
 
 
-        public override bool CheckResources () {
-            CheckSupport (useDepthTexture);
+    //    public SunShaftsResolution resolution = SunShaftsResolution.Normal;
+    //    public ShaftsScreenBlendMode screenBlendMode = ShaftsScreenBlendMode.Screen;
 
-            sunShaftsMaterial = CheckShaderAndCreateMaterial (sunShaftsShader, sunShaftsMaterial);
-            simpleClearMaterial = CheckShaderAndCreateMaterial (simpleClearShader, simpleClearMaterial);
+    //    public Transform sunTransform;
+    //    public int radialBlurIterations = 2;
+    //    public Color sunColor = Color.white;
+    //    public Color sunThreshold = new Color(0.87f,0.74f,0.65f);
+    //    public float sunShaftBlurRadius = 2.5f;
+    //    public float sunShaftIntensity = 1.15f;
 
-            if (!isSupported)
-                ReportAutoDisable ();
-            return isSupported;
-        }
+    //    public float maxRadius = 0.75f;
 
-        void OnRenderImage (RenderTexture source, RenderTexture destination) {
-            if (CheckResources()==false) {
-                Graphics.Blit (source, destination);
-                return;
-            }
+    //    public bool  useDepthTexture = true;
 
-            // we actually need to check this every frame
-            if (useDepthTexture)
-                GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
+    //    public Shader sunShaftsShader;
+    //    private Material sunShaftsMaterial;
 
-            int divider = 4;
-            if (resolution == SunShaftsResolution.Normal)
-                divider = 2;
-            else if (resolution == SunShaftsResolution.High)
-                divider = 1;
+    //    public Shader simpleClearShader;
+    //    private Material simpleClearMaterial;
 
-            Vector3 v = Vector3.one * 0.5f;
-            if (sunTransform)
-                v = GetComponent<Camera>().WorldToViewportPoint (sunTransform.position);
-            else
-                v = new Vector3(0.5f, 0.5f, 0.0f);
 
-            int rtW = source.width / divider;
-            int rtH = source.height / divider;
+    //    public override bool CheckResources () {
+    //        CheckSupport (useDepthTexture);
 
-            RenderTexture lrColorB;
-            RenderTexture lrDepthBuffer = RenderTexture.GetTemporary (rtW, rtH, 0);
+    //        sunShaftsMaterial = CheckShaderAndCreateMaterial (sunShaftsShader, sunShaftsMaterial);
+    //        simpleClearMaterial = CheckShaderAndCreateMaterial (simpleClearShader, simpleClearMaterial);
 
-            // mask out everything except the skybox
-            // we have 2 methods, one of which requires depth buffer support, the other one is just comparing images
+    //        if (!isSupported)
+    //            ReportAutoDisable ();
+    //        return isSupported;
+    //    }
 
-            sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (1.0f, 1.0f, 0.0f, 0.0f) * sunShaftBlurRadius );
-            sunShaftsMaterial.SetVector ("_SunPosition", new Vector4 (v.x, v.y, v.z, maxRadius));
-            sunShaftsMaterial.SetVector ("_SunThreshold", sunThreshold);
+    //    void OnRenderImage (RenderTexture source, RenderTexture destination) {
+    //        if (CheckResources()==false) {
+    //            Graphics.Blit (source, destination);
+    //            return;
+    //        }
 
-            if (!useDepthTexture) {
-                var format= GetComponent<Camera>().hdr ? RenderTextureFormat.DefaultHDR: RenderTextureFormat.Default;
-                RenderTexture tmpBuffer = RenderTexture.GetTemporary (source.width, source.height, 0, format);
-                RenderTexture.active = tmpBuffer;
-                GL.ClearWithSkybox (false, GetComponent<Camera>());
+    //        // we actually need to check this every frame
+    //        if (useDepthTexture)
+    //            GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
 
-                sunShaftsMaterial.SetTexture ("_Skybox", tmpBuffer);
-                Graphics.Blit (source, lrDepthBuffer, sunShaftsMaterial, 3);
-                RenderTexture.ReleaseTemporary (tmpBuffer);
-            }
-            else {
-                Graphics.Blit (source, lrDepthBuffer, sunShaftsMaterial, 2);
-            }
+    //        int divider = 4;
+    //        if (resolution == SunShaftsResolution.Normal)
+    //            divider = 2;
+    //        else if (resolution == SunShaftsResolution.High)
+    //            divider = 1;
 
-            // paint a small black small border to get rid of clamping problems
-            DrawBorder (lrDepthBuffer, simpleClearMaterial);
+    //        Vector3 v = Vector3.one * 0.5f;
+    //        if (sunTransform)
+    //            v = GetComponent<Camera>().WorldToViewportPoint (sunTransform.position);
+    //        else
+    //            v = new Vector3(0.5f, 0.5f, 0.0f);
 
-            // radial blur:
+    //        int rtW = source.width / divider;
+    //        int rtH = source.height / divider;
 
-            radialBlurIterations = Mathf.Clamp (radialBlurIterations, 1, 4);
+    //        RenderTexture lrColorB;
+    //        RenderTexture lrDepthBuffer = RenderTexture.GetTemporary (rtW, rtH, 0);
 
-            float ofs = sunShaftBlurRadius * (1.0f / 768.0f);
+    //        // mask out everything except the skybox
+    //        // we have 2 methods, one of which requires depth buffer support, the other one is just comparing images
 
-            sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f));
-            sunShaftsMaterial.SetVector ("_SunPosition", new Vector4 (v.x, v.y, v.z, maxRadius));
+    //        sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (1.0f, 1.0f, 0.0f, 0.0f) * sunShaftBlurRadius );
+    //        sunShaftsMaterial.SetVector ("_SunPosition", new Vector4 (v.x, v.y, v.z, maxRadius));
+    //        sunShaftsMaterial.SetVector ("_SunThreshold", sunThreshold);
 
-            for (int it2 = 0; it2 < radialBlurIterations; it2++ ) {
-                // each iteration takes 2 * 6 samples
-                // we update _BlurRadius each time to cheaply get a very smooth look
+    //        if (!useDepthTexture) {
+    //            var format= GetComponent<Camera>().hdr ? RenderTextureFormat.DefaultHDR: RenderTextureFormat.Default;
+    //            RenderTexture tmpBuffer = RenderTexture.GetTemporary (source.width, source.height, 0, format);
+    //            RenderTexture.active = tmpBuffer;
+    //            GL.ClearWithSkybox (false, GetComponent<Camera>());
 
-                lrColorB = RenderTexture.GetTemporary (rtW, rtH, 0);
-                Graphics.Blit (lrDepthBuffer, lrColorB, sunShaftsMaterial, 1);
-                RenderTexture.ReleaseTemporary (lrDepthBuffer);
-                ofs = sunShaftBlurRadius * (((it2 * 2.0f + 1.0f) * 6.0f)) / 768.0f;
-                sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f) );
+    //            sunShaftsMaterial.SetTexture ("_Skybox", tmpBuffer);
+    //            Graphics.Blit (source, lrDepthBuffer, sunShaftsMaterial, 3);
+    //            RenderTexture.ReleaseTemporary (tmpBuffer);
+    //        }
+    //        else {
+    //            Graphics.Blit (source, lrDepthBuffer, sunShaftsMaterial, 2);
+    //        }
 
-                lrDepthBuffer = RenderTexture.GetTemporary (rtW, rtH, 0);
-                Graphics.Blit (lrColorB, lrDepthBuffer, sunShaftsMaterial, 1);
-                RenderTexture.ReleaseTemporary (lrColorB);
-                ofs = sunShaftBlurRadius * (((it2 * 2.0f + 2.0f) * 6.0f)) / 768.0f;
-                sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f) );
-            }
+    //        // paint a small black small border to get rid of clamping problems
+    //        DrawBorder (lrDepthBuffer, simpleClearMaterial);
 
-            // put together:
+    //        // radial blur:
 
-            if (v.z >= 0.0f)
-                sunShaftsMaterial.SetVector ("_SunColor", new Vector4 (sunColor.r, sunColor.g, sunColor.b, sunColor.a) * sunShaftIntensity);
-            else
-                sunShaftsMaterial.SetVector ("_SunColor", Vector4.zero); // no backprojection !
-            sunShaftsMaterial.SetTexture ("_ColorBuffer", lrDepthBuffer);
-            Graphics.Blit (source, destination, sunShaftsMaterial, (screenBlendMode == ShaftsScreenBlendMode.Screen) ? 0 : 4);
+    //        radialBlurIterations = Mathf.Clamp (radialBlurIterations, 1, 4);
 
-            RenderTexture.ReleaseTemporary (lrDepthBuffer);
-        }
-    }
+    //        float ofs = sunShaftBlurRadius * (1.0f / 768.0f);
+
+    //        sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f));
+    //        sunShaftsMaterial.SetVector ("_SunPosition", new Vector4 (v.x, v.y, v.z, maxRadius));
+
+    //        for (int it2 = 0; it2 < radialBlurIterations; it2++ ) {
+    //            // each iteration takes 2 * 6 samples
+    //            // we update _BlurRadius each time to cheaply get a very smooth look
+
+    //            lrColorB = RenderTexture.GetTemporary (rtW, rtH, 0);
+    //            Graphics.Blit (lrDepthBuffer, lrColorB, sunShaftsMaterial, 1);
+    //            RenderTexture.ReleaseTemporary (lrDepthBuffer);
+    //            ofs = sunShaftBlurRadius * (((it2 * 2.0f + 1.0f) * 6.0f)) / 768.0f;
+    //            sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f) );
+
+    //            lrDepthBuffer = RenderTexture.GetTemporary (rtW, rtH, 0);
+    //            Graphics.Blit (lrColorB, lrDepthBuffer, sunShaftsMaterial, 1);
+    //            RenderTexture.ReleaseTemporary (lrColorB);
+    //            ofs = sunShaftBlurRadius * (((it2 * 2.0f + 2.0f) * 6.0f)) / 768.0f;
+    //            sunShaftsMaterial.SetVector ("_BlurRadius4", new Vector4 (ofs, ofs, 0.0f, 0.0f) );
+    //        }
+
+    //        // put together:
+
+    //        if (v.z >= 0.0f)
+    //            sunShaftsMaterial.SetVector ("_SunColor", new Vector4 (sunColor.r, sunColor.g, sunColor.b, sunColor.a) * sunShaftIntensity);
+    //        else
+    //            sunShaftsMaterial.SetVector ("_SunColor", Vector4.zero); // no backprojection !
+    //        sunShaftsMaterial.SetTexture ("_ColorBuffer", lrDepthBuffer);
+    //        Graphics.Blit (source, destination, sunShaftsMaterial, (screenBlendMode == ShaftsScreenBlendMode.Screen) ? 0 : 4);
+
+    //        RenderTexture.ReleaseTemporary (lrDepthBuffer);
+    //    }
+    //}
 }

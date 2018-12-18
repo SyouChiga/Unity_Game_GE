@@ -10,6 +10,7 @@ namespace Game
         {
             public class PlayerWaitState : BasePlayerAnimationState
             {
+                
                 // Start is called before the first frame update
                 void Start()
                 {
