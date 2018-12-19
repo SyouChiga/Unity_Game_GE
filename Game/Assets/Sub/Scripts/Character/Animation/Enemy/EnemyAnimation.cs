@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace Game
 {
     namespace Animation
@@ -32,6 +33,19 @@ namespace Game
                 set
                 {
                     attack_ = value;
+                }
+            }
+            [SerializeField]
+            private bool attack2_ = false; //攻撃フラグ
+            public bool Attack2
+            {
+                get
+                {
+                    return attack2_;
+                }
+                set
+                {
+                    attack2_ = value;
                 }
             }
             void Start()

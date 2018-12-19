@@ -16,6 +16,7 @@ namespace Game
                     enemyAnimation = (EnemyAnimation)animation;
 
                     enemyAnimation.Animator.SetBool("is_attack", true);
+                 
                     enemyAnimation.Animator.ForceStateNormalizedTime(0.0f);
                 }
 
@@ -24,10 +25,19 @@ namespace Game
                 {
                     
                     AnimatorStateInfo state = enemyAnimation.Animator.GetCurrentAnimatorStateInfo(0);
+
                     if(state.normalizedTime > 1.0f)
                     {
-                        enemyAnimation.Attack = false;
-                        AddAnimation();
+                        if (enemyAnimation.Attack2 == true)
+                        {
+                            enemyAnimation.Attack = false;
+                            AddAnimation2();
+                        }
+                        else
+                        {
+                            enemyAnimation.Attack = false;
+                            AddAnimation();
+                        }
                     }
                 }
 
@@ -36,6 +46,13 @@ namespace Game
                 {
                     Object.Destroy(enemyAnimation.AnimationStateValue);
                     enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyWaitState>();
+                    enemyAnimation.ChangeAnimationState();
+                }
+
+                public void AddAnimation2()
+                {
+                    Object.Destroy(enemyAnimation.AnimationStateValue);
+                    enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyAttack2State>();
                     enemyAnimation.ChangeAnimationState();
                 }
             }

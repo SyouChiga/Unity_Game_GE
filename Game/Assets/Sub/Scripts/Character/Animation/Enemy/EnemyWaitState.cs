@@ -15,6 +15,7 @@ namespace Game
                 {
                     enemyAnimation = (EnemyAnimation)animation;
                     enemyAnimation.Animator.SetBool("is_attack", false);
+                    enemyAnimation.Animator.SetBool("is_attack2", false);
                     enemyAnimation.Animator.SetBool("is_walk", false);
                     enemyAnimation.Walk = false;
                 }

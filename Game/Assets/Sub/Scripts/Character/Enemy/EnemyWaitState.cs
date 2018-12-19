@@ -27,11 +27,21 @@ namespace Game
                     waitTime_ += Time.deltaTime;
                     if(waitTime_ >= 3.0f)
                     {
+                        int range = Random.Range(0, 100);
                         Object.Destroy(GetComponent<BaseEnemy>().State);
-                        EnemyWalkState walk= gameObject.AddComponent<EnemyWalkState>();
-                        walk.GoalPosition = goalPost_.transform;
-                        GetComponent<BaseEnemy>().State = walk;
-                        GetComponent<BaseEnemy>().Animation.Walk = true;
+
+                        if (range < 50)
+                        {
+                            EnemyWalkState walk = gameObject.AddComponent<EnemyWalkState>();
+                            walk.GoalPosition = goalPost_.transform;
+                            GetComponent<BaseEnemy>().State = walk;
+                            GetComponent<BaseEnemy>().Animation.Walk = true;
+                        }
+                        else
+                        {
+                            GetComponent<BaseEnemy>().State = gameObject.AddComponent<EnemyAttackState>();
+                            GetComponent<BaseEnemy>().Animation.Attack = true;
+                        }
                     }
                 }
 
