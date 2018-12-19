@@ -21,6 +21,10 @@ namespace Game
                 // Update is called once per frame
                 void Update()
                 {
+                    if (enemyAnimation.Attack)
+                    {
+                        AddAnimationAttack();
+                    }
                     if (!enemyAnimation.Walk)
                     {
 
@@ -34,6 +38,12 @@ namespace Game
                 {
                     Object.Destroy(enemyAnimation.AnimationStateValue);
                     enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyWaitState>();
+                    enemyAnimation.ChangeAnimationState();
+                }
+                public void AddAnimationAttack()
+                {
+                    Object.Destroy(enemyAnimation.AnimationStateValue);
+                    enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyAttackState>();
                     enemyAnimation.ChangeAnimationState();
                 }
             }

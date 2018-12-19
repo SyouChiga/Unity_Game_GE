@@ -14,13 +14,21 @@ namespace Game
                 void Start()
                 {
                     enemyAnimation = (EnemyAnimation)animation;
-
+                    enemyAnimation.Animator.SetBool("is_attack", false);
                     enemyAnimation.Animator.SetBool("is_walk", false);
+                    enemyAnimation.Walk = false;
                 }
 
                 // Update is called once per frame
                 void Update()
                 {
+
+                    AnimatorStateInfo state = enemyAnimation.Animator.GetCurrentAnimatorStateInfo(0);
+
+                    if (enemyAnimation.Attack)
+                    {
+                        AddAnimationAttack();
+                    }
                     if (enemyAnimation.Walk)
                     {
 
@@ -34,6 +42,12 @@ namespace Game
                 {
                     Object.Destroy(enemyAnimation.AnimationStateValue);
                     enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyWalkState>();
+                    enemyAnimation.ChangeAnimationState();
+                }
+                public void AddAnimationAttack()
+                {
+                    Object.Destroy(enemyAnimation.AnimationStateValue);
+                    enemyAnimation.AnimationStateValue = gameObject.AddComponent<EnemyAttackState>();
                     enemyAnimation.ChangeAnimationState();
                 }
             }

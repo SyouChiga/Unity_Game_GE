@@ -21,6 +21,19 @@ namespace Game
                     walk_ = value;
                 }
             }
+            [SerializeField]
+            private bool attack_ = false; //攻撃フラグ
+            public bool Attack
+            {
+                get
+                {
+                    return attack_;
+                }
+                set
+                {
+                    attack_ = value;
+                }
+            }
             void Start()
             {
                 animationState_ = gameObject.AddComponent<Enemy.EnemyWaitState>();

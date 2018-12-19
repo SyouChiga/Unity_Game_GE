@@ -22,7 +22,7 @@ namespace Game
                 float mouseInputX = Input.GetAxis("Vertical2");
 
                 float mouseInputY = Input.GetAxis("Horizontal2");
-                Debug.Log(mouseInputX);
+
                 if (mouseInputX > 0 || mouseInputX < 0 || mouseInputY > 0 || mouseInputY < 0)
                 {
 
@@ -37,7 +37,7 @@ namespace Game
                 Vector3 pos = playerPos.forward;
                 Vector3 playerPosition = playerPos.position;
                 playerPosition.y = 2.0f;
-                Debug.Log(pos);
+               
                 transform.position = playerPosition - new Vector3(pos.x * 3.0f,0.0f, pos.z * 3.0f);
 
 
