@@ -17,6 +17,11 @@ namespace Game
             {
                 return linkObj_;
             }
+            set
+            {
+                linkObj_ = value;
+            }
+           
         }
         //接続しているオブジェクトの距離
         [SerializeField]
