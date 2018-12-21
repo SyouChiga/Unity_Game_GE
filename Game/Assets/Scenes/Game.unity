@@ -847,6 +847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkObj_:
   - {fileID: 1294241062}
+  - {fileID: 1909746048}
   linkLength_: []
 --- !u!1 &762386636 stripped
 GameObject:
@@ -1159,6 +1160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkObj_:
   - {fileID: 1294241062}
+  - {fileID: 665391472}
   linkLength_: []
 --- !u!1 &2007399084
 GameObject:

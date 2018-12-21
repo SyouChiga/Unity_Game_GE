@@ -32,33 +32,37 @@ namespace Game
                 
                 foreach (var link in links)
                 {
-                    //接続されているオブジェクト
+                    //接続先のオブジェクト
                     GameObject[] linkObj = link.LinkObject;
-                   
+
                     foreach (var obj in linkObj)
                     {
+                        Debug.Log(obj);
                         //接続先のオブジェクトのリンク
                         Link nextLink = obj.GetComponent<Link>();
                         
                         bool safe = false; //接続先の自分が存在しているかどうか
+                        
                         GameObject[] Object = nextLink.LinkObject;
                         foreach (var nextLinkObj in nextLink.LinkObject)
                         {
-                            
-                            if (nextLink.name == obj.name)
+                            if (nextLinkObj.name == link.gameObject.name)
                             {
                                 safe = true;
                                 break;
                             }
+                            else
+                            {
+                                safe = false;
+                            }
+
                         }
-                       
-                        //接続先に自分が存在していなかったら
                         if (!safe)
                         {
-                            Debug.Log(safe);
+
                             GameObject[] saveObject = new GameObject[nextLink.LinkObject.Length + 1];
                             int cnt = 0; //カウント
-                            for(cnt = 0; cnt < nextLink.LinkObject.Length; cnt++)
+                            for (cnt = 0; cnt < nextLink.LinkObject.Length; cnt++)
                             {
                                 saveObject[cnt] = nextLink.LinkObject[cnt];
                             }
@@ -66,6 +70,10 @@ namespace Game
                             saveObject[cnt] = link.gameObject;
                             nextLink.LinkObject = saveObject;
                         }
+
+                        Debug.Log(safe);
+                        //接続先に自分が存在していなかったら
+
                     }
                 }
             }
