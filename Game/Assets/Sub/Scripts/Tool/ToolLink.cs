@@ -45,7 +45,7 @@ namespace Game
                         foreach (var nextLinkObj in nextLink.LinkObject)
                         {
                             
-                            if (nextLink == obj)
+                            if (nextLink.name == obj.name)
                             {
                                 safe = true;
                                 break;

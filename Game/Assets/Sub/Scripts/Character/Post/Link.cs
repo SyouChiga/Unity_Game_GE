@@ -5,7 +5,6 @@ using UnityEditor;
 
 namespace Game
 {
-    [CustomEditor(typeof(Link))]
     public class Link : MonoBehaviour
     {
         //接続するオブジェクト
