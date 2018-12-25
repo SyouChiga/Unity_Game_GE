@@ -118,14 +118,32 @@ namespace Game
                 int cnt = 0;
                 foreach(var posGoal in postRoot_)
                 {
+                   
                     //同じなら処理しない
                     if (post == posGoal)
                     {
                         cnt++;
                         continue;
                     }
+                    float length_, lenght1_;
+                    bool triger = false;
+                    length_ = lenght1_ = 0.0f;
+                    List<GameObject> goalSaveRootObj_ = new List<GameObject>();
+                    goalSaveRootObj_.Add(post.StartRootObject);
                     post.RootGoalObject[cnt].GoalRootObject.Add(post.StartRootObject);
-                    PostRootGoalReturn(post.StartRootObject.GetComponent<Link>(), posGoal.StartRootObject, post.RootGoalObject[cnt].GoalRootObject);
+                    bool one = false;
+                    //隣にあるかどうか調べる
+                    foreach(var linkObj in post.StartRootObject.GetComponent<Link>().LinkObject)
+                    {
+                        if(linkObj == posGoal.StartRootObject)
+                        {
+                            one = true;
+                            post.RootGoalObject[cnt].GoalRootObject.Add(linkObj);
+                            break;
+                        }
+                    }
+
+                    if(one == false)PostRootGoalReturn(post.StartRootObject.GetComponent<Link>(), posGoal.StartRootObject,post.RootGoalObject[cnt].GoalRootObject, goalSaveRootObj_, ref length_, ref lenght1_, ref triger);
                     cnt++; 
 
                 }
@@ -133,18 +151,19 @@ namespace Game
         }
         //再帰　繋がっている先があるかどうか
         //trueなら次があり、falseは次がない
-        bool PostRootGoalReturn(Link rLink,GameObject goal,List<GameObject> postRootGoal)
+        bool PostRootGoalReturn(Link rLink,GameObject goal,List<GameObject> postRootGoal, List<GameObject> postRootNewGoal,ref float length,ref float newLength,ref bool triger)
         {
             bool safe = true;
+            int index = 0;
             foreach (var linkObj in rLink.LinkObject)
             {
                 safe = true;
                 int cnt = 0;
-                foreach(var returnObj in postRootGoal)
+                foreach(var returnObj in postRootNewGoal)
                 {
                     if(linkObj == returnObj)
                     {
-                        if (linkObj == postRootGoal[0])
+                        if (linkObj == postRootNewGoal[0])
                         {
                             safe = false;
                         }
@@ -158,25 +177,59 @@ namespace Game
                 }
                 if(goal == linkObj)
                 {
-                    postRootGoal.Add(linkObj);
+                    if (index >= 1)
+                    {
+                        if (postRootNewGoal[postRootNewGoal.Count - 1] == rLink.LinkObject[index - 1])
+                        {
+                            postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                        }
+                    }
+                    postRootNewGoal.Add(linkObj);
                     return true;
                 }
                 if (safe == true)
                 {
-                    postRootGoal.Add(linkObj);
-                    if(PostRootGoalReturn(linkObj.GetComponent<Link>(), goal, postRootGoal))
+                    postRootNewGoal.Add(linkObj);
+
+                    if (PostRootGoalReturn(linkObj.GetComponent<Link>(), goal, postRootGoal,postRootNewGoal,ref length,ref newLength,ref triger))
                     {
-                        return true;
+                       
+                        for(int cntObj = postRootNewGoal.Count - 1; cntObj > 0; cntObj--)
+                        {
+                            newLength += (postRootNewGoal[cntObj - 1].transform.position - postRootNewGoal[cntObj].transform.position).magnitude;
+                        }
+
+                        //前回の経路探索を見比べる
+                        if(newLength <= length || triger == false)
+                        {
+                            triger = true;
+                            postRootGoal.Clear();
+                            foreach(var saveObj in postRootNewGoal)
+                            {
+                                postRootGoal.Add(saveObj);
+                            }
+                            length = newLength;
+            
+                           
+                        }
+                        newLength = 0.0f;
+                        postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                        postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+
                     }
                     else
                     {
                          
-                        if(postRootGoal.Count - 1 != 0) postRootGoal.RemoveAt(postRootGoal.Count - 1);
+                        if(postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
                     }
                 }
-               
+                index++;
+
+
             }
-            return safe;
+            if (postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+
+            return false;
         }
 
 
