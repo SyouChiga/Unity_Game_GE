@@ -24,7 +24,7 @@ namespace Game
         }
         
         [SerializeField]
-        private List<PostGoal> rootGoalObj_  = new List<PostGoal>();
+        private List<PostGoal> rootGoalObj_;
         public List<PostGoal> RootGoalObject
         {
             set
@@ -44,7 +44,7 @@ namespace Game
     {
         [SerializeField]
         //終わりまでのルート
-        private List<GameObject> goalRootObj_ = new List<GameObject>();
+        private List<GameObject> goalRootObj_;
         public List<GameObject> GoalRootObject
         {
             set
@@ -101,10 +101,11 @@ namespace Game
             foreach(var postRootObj in postRoot_)
             {
                 postRootObj.StartRootObject = link_[cnt].gameObject;
+                postRootObj.RootGoalObject = new List<PostGoal>();
                 for (int nCnt = 0 ; nCnt < link_.Length; nCnt++)
                 {
                     postRootObj.RootGoalObject.Add(new PostGoal());
-
+                    postRootObj.RootGoalObject[nCnt].GoalRootObject = new List<GameObject>();
                 }
                 cnt++;
             }
@@ -124,6 +125,10 @@ namespace Game
                     {
                         cnt++;
                         continue;
+                    }
+                    if(cnt == 5)
+                    {
+                        Debug.Log("aa");
                     }
                     float length_, lenght1_;
                     bool triger = false;
@@ -181,7 +186,7 @@ namespace Game
                     {
                         if (postRootNewGoal[postRootNewGoal.Count - 1] == rLink.LinkObject[index - 1])
                         {
-                            postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                            if (postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
                         }
                     }
                     postRootNewGoal.Add(linkObj);
@@ -191,43 +196,50 @@ namespace Game
                 {
                     postRootNewGoal.Add(linkObj);
 
-                    if (PostRootGoalReturn(linkObj.GetComponent<Link>(), goal, postRootGoal,postRootNewGoal,ref length,ref newLength,ref triger))
+                    if (PostRootGoalReturn(linkObj.GetComponent<Link>(), goal, postRootGoal, postRootNewGoal, ref length, ref newLength, ref triger))
                     {
-                       
-                        for(int cntObj = postRootNewGoal.Count - 1; cntObj > 0; cntObj--)
+
+                        for (int cntObj = postRootNewGoal.Count - 1; cntObj > 0; cntObj--)
                         {
                             newLength += (postRootNewGoal[cntObj - 1].transform.position - postRootNewGoal[cntObj].transform.position).magnitude;
                         }
 
                         //前回の経路探索を見比べる
-                        if(newLength <= length || triger == false)
+                        if (newLength <= length || triger == false)
                         {
                             triger = true;
                             postRootGoal.Clear();
-                            foreach(var saveObj in postRootNewGoal)
+                            foreach (var saveObj in postRootNewGoal)
                             {
                                 postRootGoal.Add(saveObj);
                             }
                             length = newLength;
-            
-                           
+
+
                         }
                         newLength = 0.0f;
-                        postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
-                        postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                        if (postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                        if (postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
 
                     }
                     else
                     {
-                         
-                        if(postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+
+                        if (postRootNewGoal.Count - 1 != 0 && rLink.gameObject != postRootNewGoal[postRootNewGoal.Count - 1])
+                        {
+                            postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+                        }
                     }
                 }
                 index++;
 
 
             }
-            if (postRootNewGoal.Count - 1 != 0) postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+            if (postRootNewGoal.Count - 1 != 0)
+            {
+                postRootNewGoal.RemoveAt(postRootNewGoal.Count - 1);
+
+            }
 
             return false;
         }
