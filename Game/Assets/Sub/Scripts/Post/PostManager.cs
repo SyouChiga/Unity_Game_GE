@@ -64,13 +64,28 @@ namespace Game
         //リンク
         [SerializeField]
         Link[] link_;
+        public Link[] Link
+        {
+            get
+            {
+                return link_;
+            }
+        }
         //ルート
         [SerializeField]
         List<PostRoot> postRoot_;
+        public List<PostRoot> PostRoot
+        {
+            get
+            {
+                return postRoot_;
+            }
+        }
+
         //ダイクストラのセーブ
         public Save.DijkstraSave dijkstraSave_;
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             link_ = GameObject.FindObjectsOfType<Link>();
 

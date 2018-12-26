@@ -32,10 +32,21 @@ namespace Game
 
                         if (range < 50)
                         {
-                            EnemyWalkState walk = gameObject.AddComponent<EnemyWalkState>();
-                            walk.GoalPosition = goalPost_.transform;
-                            GetComponent<BaseEnemy>().State = walk;
-                            GetComponent<BaseEnemy>().Animation.Walk = true;
+                            if (range > 25)
+                            {
+                                EnemyWalkState walk = gameObject.AddComponent<EnemyWalkState>();
+                                walk.GoalPosition = goalPost_.transform;
+                                GetComponent<BaseEnemy>().State = walk;
+                                GetComponent<BaseEnemy>().Animation.Walk = true;
+                            }
+                            else
+                            {
+                                Link[] link = GameObject.Find("FieldObject/Post").GetComponent<PostManager>().Link;
+                                EnemyWaitPostState walk = gameObject.AddComponent<EnemyWaitPostState>();
+                                walk.IndexGoal = Random.Range(0, link.Length - 1);
+                                GetComponent<BaseEnemy>().State = walk;
+                                GetComponent<BaseEnemy>().Animation.Walk = true;
+                            }
                         }
                         else
                         {
