@@ -75,6 +75,7 @@ namespace Game
                         //接続先に自分が存在していなかったら
 
                     }
+                    link.InitLink();
                 }
             }
 #endif

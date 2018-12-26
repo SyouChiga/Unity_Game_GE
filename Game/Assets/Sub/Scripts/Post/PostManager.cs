@@ -123,16 +123,7 @@ namespace Game
                 foreach(var posGoal in postRoot_)
                 {
                    
-                    //同じなら処理しない
-                    if (post == posGoal)
-                    {
-                        cnt++;
-                        continue;
-                    }
-                    if(cnt == 5)
-                    {
-                        Debug.Log("aa");
-                    }
+
                     float length_, lenght1_;
                     bool triger = false;
                     length_ = lenght1_ = 0.0f;
@@ -140,8 +131,14 @@ namespace Game
                     goalSaveRootObj_.Add(post.StartRootObject);
                     post.RootGoalObject[cnt].GoalRootObject.Add(post.StartRootObject);
                     bool one = false;
+                    //同じなら処理しない
+                    if (post == posGoal)
+                    {
+                        cnt++;
+                        continue;
+                    }
                     //隣にあるかどうか調べる
-                    foreach(var linkObj in post.StartRootObject.GetComponent<Link>().LinkObject)
+                    foreach (var linkObj in post.StartRootObject.GetComponent<Link>().LinkObject)
                     {
                         if(linkObj == posGoal.StartRootObject)
                         {
@@ -253,10 +250,10 @@ namespace Game
             List<Save.PostRootINT> postRootSave_;
             postRootSave_ = dijkstraSave_.LinkSave;
 
-          
+            postRootSave_.Clear();
 
             //リンクIDを入れる
-            for(int cnt = 0; cnt < postRoot_.Count; cnt++)
+            for (int cnt = 0; cnt < postRoot_.Count; cnt++)
             {
                 postRootSave_.Add(new Save.PostRootINT());
                 postRootSave_[cnt].StartRootObject = postRoot_[cnt].StartRootObject.GetComponent<Link>().LinkID;
