@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
-#if UNITY_EDITOR
+
 namespace Game
 {
     namespace Save
     {
+
         //ルート
         [Serializable]
         public class PostRootINT
@@ -96,10 +97,8 @@ namespace Game
 
             }
 
-
-
-
         }
+
     }
 }
-#endif
+

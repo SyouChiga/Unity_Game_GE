@@ -137,7 +137,7 @@ c535078eb890678055381f6df17ccea7 Assembly-CSharp.dll:Game.Animation.Enemy.EnemyA
 303ad70ce203ad874efe2965d0fbcff9 Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsEventTracker
 7fb9de8dcf73854b6b328eca1f7a6e6d Unity.Analytics.Tracker.dll:UnityEngine.Analytics.AnalyticsTracker
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:Game.Character.Enemy.EnemyWalkState
-ce18d8b463a5341da0267264d765641a Assembly-CSharp.dll:Game.PostManager
+8e05f04431cab2f8558bb08590234ba0 Assembly-CSharp.dll:Game.PostManager
 ea76bc7a69c8c5cde69c6055eb13911b Assembly-CSharp.dll:Game.Character.Enemy.EnemyWaitPostState
 122d7ffab68b4eedc72a1fce03e63c2f Assembly-CSharp.dll:UnityStandardAssets.ImageEffects.BloomOptimized
 94017dcc9f00fe671ea7dc427b4da011 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset

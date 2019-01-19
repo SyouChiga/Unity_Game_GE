@@ -86,7 +86,7 @@ namespace Game
 
         //ダイクストラのデータ
         [SerializeField]
-        private Save.DijkstraSave dijkstraDate_;
+        private Game.Save.DijkstraSave dijkstraDate_;
 
 
         // Start is called before the first frame update
