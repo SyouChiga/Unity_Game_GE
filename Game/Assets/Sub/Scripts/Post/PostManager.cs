@@ -37,6 +37,8 @@ namespace Game
             }
         }
 
+
+
     }
     //ルートゴール
     [Serializable]
@@ -82,8 +84,11 @@ namespace Game
             }
         }
 
-        //ダイクストラのセーブ
-        public Save.DijkstraSave dijkstraSave_;
+        //ダイクストラのデータ
+        [SerializeField]
+        private Save.DijkstraSave dijkstraDate_;
+
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -92,7 +97,7 @@ namespace Game
             Array.Sort(link_, (a, b) => a.LinkID - b.LinkID);
 
             Dijkstra();
-            DijkstraSave();
+          
         }
 
         // Update is called once per frame
@@ -104,7 +109,27 @@ namespace Game
         //ダイクストラ
         void Dijkstra()
         {
-            PostRootInit();
+            //配列を確保
+            postRoot_ = new List<Game.PostRoot>(dijkstraDate_.LinkSave.Count);
+
+ 
+                for (int cntObj = 0; cntObj < link_.Length; cntObj++)
+                {
+                    postRoot_.Add(new PostRoot());
+                    postRoot_[cntObj].StartRootObject = link_[cntObj].gameObject;
+                    postRoot_[cntObj].RootGoalObject = new List<PostGoal>(link_.Length);
+                    for (int cnt = 0; cnt < link_.Length; cnt++)
+                    {
+                        postRoot_[cntObj].RootGoalObject.Add(new PostGoal());
+                        postRoot_[cntObj].RootGoalObject[cnt].GoalRootObject = new List<GameObject>(dijkstraDate_.LinkSave[cntObj].RootGoalObject[cntObj].GoalRootObject.Count);
+                        foreach (var indexObj in dijkstraDate_.LinkSave[cntObj].RootGoalObject[cnt].GoalRootObject)
+                        {
+                            postRoot_[cntObj].RootGoalObject[cnt].GoalRootObject.Add(link_[indexObj - 1].gameObject);
+                        }
+                    }
+                }
+            
+          
         }
 
         //ポストルート初期化
@@ -259,41 +284,6 @@ namespace Game
             return false;
         }
 
-        //ダイクストラセーブ
-        void DijkstraSave()
-        {
-            List<Save.PostRootINT> postRootSave_;
-            postRootSave_ = dijkstraSave_.LinkSave;
-
-            postRootSave_.Clear();
-
-            //リンクIDを入れる
-            for (int cnt = 0; cnt < postRoot_.Count; cnt++)
-            {
-                postRootSave_.Add(new Save.PostRootINT());
-                postRootSave_[cnt].StartRootObject = postRoot_[cnt].StartRootObject.GetComponent<Link>().LinkID;
-                postRootSave_[cnt].RootGoalObject = new List<Save.PostGoalINT>(postRoot_.Count);
-               
-                for (int cntIndex = 0; cntIndex < postRoot_.Count; cntIndex++)
-                {
-                    postRootSave_[cnt].RootGoalObject.Add(new Save.PostGoalINT());
-                    postRootSave_[cnt].RootGoalObject[cntIndex] = new Save.PostGoalINT();
-                    postRootSave_[cnt].RootGoalObject[cntIndex].GoalRootObject = new List<int>();
-                }
-                int index = 0;
-                foreach(var linkObj in postRoot_[cnt].RootGoalObject)
-                {
-                    foreach (var goalObj in linkObj.GoalRootObject)
-                    {
-                        postRootSave_[cnt].RootGoalObject[index].GoalRootObject.Add(goalObj.GetComponent<Link>().LinkID);
-                        
-                    }
-                    index++;
-                }
-            }
-
-           
-        }
 
 
 

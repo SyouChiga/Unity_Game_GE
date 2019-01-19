@@ -42,7 +42,7 @@ namespace Game
                 // Start is called before the first frame update
                 void Start()
                 {
-                    indexGoal_ = 6;
+                  
                     GoalInit();
                 }
 

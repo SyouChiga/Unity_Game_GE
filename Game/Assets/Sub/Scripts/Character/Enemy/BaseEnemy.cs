@@ -63,7 +63,7 @@ namespace Game
                 //Init
                 protected void Init()
                 {
-                    state_ = gameObject.AddComponent<EnemyWaitPostState>();
+                    state_ = gameObject.AddComponent<EnemyWaitState>();
                     enemyAnimation_ = GetComponent<Animation.EnemyAnimation>();
                     GameObject[] post = GameObject.FindGameObjectsWithTag("post_tag");
                     postObj_ = post;

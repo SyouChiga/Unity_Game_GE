@@ -68,15 +68,18 @@ namespace Game
                 //目的地まで向かう
                 bool Walk()
                 {
-                    Vector3 goalVector = (postGoal_[cntGoal_].transform.position - transform.position);
+                    Vector3 goalVectorXZ = new Vector3(postGoal_[cntGoal_].transform.position.x, 0.0f, postGoal_[cntGoal_].transform.position.z);
+                    Vector3 enemyVectorXZ = new Vector3(transform.position.x, 0.0f, transform.position.z);
+
+                    Vector3 goalVector = (goalVectorXZ - enemyVectorXZ);
 
                     transform.position += goalVector.normalized * 0.05f;
 
 
-                    if (transform.position.y != postGoal_[cntGoal_].transform.position.y)
-                    {
-                        postGoal_[cntGoal_].transform.position = new Vector3(postGoal_[cntGoal_].transform.position.x, transform.position.y, postGoal_[cntGoal_].transform.position.z);
-                    }
+                    //if (transform.position.y != postGoal_[cntGoal_].transform.position.y)
+                    //{
+                    //    postGoal_[cntGoal_].transform.position = new Vector3(postGoal_[cntGoal_].transform.position.x, transform.position.y, postGoal_[cntGoal_].transform.position.z);
+                    //}
                     Quaternion targetRotation = Quaternion.LookRotation(postGoal_[cntGoal_].transform.position - transform.position);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 1.05f);
                     if (goalVector.magnitude < 1.0f)

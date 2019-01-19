@@ -9,7 +9,7 @@ namespace Game
 {
     namespace Tool
     {
-
+#if UNITY_EDITOR
         public class ToolDijkstraCreate : EditorWindow
         {
             //リンク
@@ -20,7 +20,7 @@ namespace Game
             static List<PostRoot> postRoot_;
             //ダイクストラのセーブ
             Save.DijkstraSave dijkstraSave_;
-#if UNITY_EDITOR
+
             [MenuItem("Tools/DijkstraCreate %d")]
             static void Init()
             {
@@ -33,6 +33,8 @@ namespace Game
                 {
                     CreateInit();
                 }
+
+                EditorUtility.SetDirty(dijkstraSave_);
             }
 
             void CreateInit()
@@ -239,9 +241,12 @@ namespace Game
 
 
             }
-#endif
+
+
 
         }
+#endif
+
     }
 }
 

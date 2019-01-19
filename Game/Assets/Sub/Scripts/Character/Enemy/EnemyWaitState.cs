@@ -50,8 +50,19 @@ namespace Game
                         }
                         else
                         {
-                            GetComponent<BaseEnemy>().State = gameObject.AddComponent<EnemyAttackState>();
-                            GetComponent<BaseEnemy>().Animation.Attack = true;
+                            if (range < 75)
+                            {
+                                GetComponent<BaseEnemy>().State = gameObject.AddComponent<EnemyAttackState>();
+                                GetComponent<BaseEnemy>().Animation.Attack = true;
+                            }
+                            else
+                            {
+                                Link[] link = GameObject.Find("FieldObject/Post").GetComponent<PostManager>().Link;
+                                EnemyWaitPostState walk = gameObject.AddComponent<EnemyWaitPostState>();
+                                walk.IndexGoal = Random.Range(0, link.Length - 1);
+                                GetComponent<BaseEnemy>().State = walk;
+                                GetComponent<BaseEnemy>().Animation.Walk = true;
+                            }
                         }
                     }
                 }

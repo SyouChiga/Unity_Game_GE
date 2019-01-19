@@ -40,18 +40,20 @@ namespace Game
                 //目的地まで向かう
                 bool Walk()
                 {
-                    Vector3 goalVector = (goal_.position - transform.position);
+                    Vector3 goalVectorXZ = new Vector3(goal_.transform.position.x, 0.0f,goal_.transform.position.z);
+                    Vector3 enemyVectorXZ = new Vector3(transform.position.x, 0.0f, transform.position.z);
 
+                    Vector3 goalVector = (goalVectorXZ - enemyVectorXZ);
                     transform.position += goalVector.normalized * 0.05f;
 
                   
-                    if (transform.position.y != goal_.position.y)
-                    {
-                        goal_.position = new Vector3(goal_.position.x, transform.position.y, goal_.position.z);
-                    }
+                    //if (transform.position.y != goal_.position.y)
+                    //{
+                    //    goal_.position = new Vector3(goal_.position.x, transform.position.y, goal_.position.z);
+                    //}
                     Quaternion targetRotation = Quaternion.LookRotation(goal_.position - transform.position);
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 1.05f);
-                    if (goalVector.magnitude < 3.0f)
+                    if (goalVector.magnitude < 1.0f)
                     {
                         return true;
                     }
