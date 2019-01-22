@@ -42,6 +42,18 @@ namespace Game
                 return linkID_;
             }
         }
+
+        //ウィンドウのサイズ
+        private Rect windowSize_ = new Rect(new Vector2(0.0f, 0.0f), new Vector2(100.0f, 50.0f));
+        public Rect WindoqSIze
+        {
+            get
+            {
+                return windowSize_;
+            }
+        }
+        private Vector2 move_ = new Vector2(0.0f, 0.0f);
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -75,6 +87,39 @@ namespace Game
                 Gizmos.DrawLine(transform.position, obj.transform.position);
             }
         }
+#if UNITY_EDITOR
+        public void ToolUpdate(Vector2 move)
+        {
+            move_ += move;
+            windowSize_.position = new Vector2(transform.position.x * 20.0f + move_.x, transform.position.z * 20.0f + move_.y);
+           
+        }
+        //toolするときの描画処理
+        public void ToolDraw()
+        {
+            windowSize_ = GUI.Window(linkID_, windowSize_, ToolWindowDraw, "LINK" + linkID_);
+            DrawLine();
+        }
+
+        private void ToolWindowDraw(int id)
+        {
+            GUI.DragWindow();
+            GUI.Label(new Rect(30, 20, 100, 100), "ID" + id, EditorStyles.label);
+
+
+        }
+
+        void DrawLine()
+        {
+            foreach (var obj in linkObj_)
+            {
+                Vector3 start = new Vector3(windowSize_.position.x + 100.0f / 2.0f, windowSize_.position.y + 50.0f / 2.0f, 0.0f);
+                Vector3 end = new Vector3(obj.GetComponent<Link>().windowSize_.position.x + 100.0f / 2.0f, obj.GetComponent<Link>().windowSize_.position.y + 50.0f / 2.0f, 0.0f);
+
+                Handles.DrawLine(start, end);
+            }
+        }
+#endif
 
     }
 }

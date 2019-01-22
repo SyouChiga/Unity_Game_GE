@@ -33,8 +33,7 @@ namespace Game
                 {
                     CreateInit();
                 }
-
-                EditorUtility.SetDirty(dijkstraSave_);
+                if(dijkstraSave_ != null) EditorUtility.SetDirty(dijkstraSave_);
             }
 
             void CreateInit()
